@@ -1,22 +1,22 @@
 sudo: required
 services:
-    - docker
+  - docker
 
 before_install:
-    - docker build -t adityaraval/react-test -f ./client/Dockerfile.dev ./client
+  - docker build -t adityaraval/react-test -f ./client/Dockerfile.dev ./client
 
 script:
-    - docker run -e CI=true adityaraval/react-test npm run test
+  - docker run -e CI=true adityaraval/react-test npm run test
 
 after_success:
-    - docker build -t adityaraval/multi-client -f ./client
-    - docker build -t adityaraval/multi-nginx -f ./nginx
-    - docker build -t adityaraval/multi-server -f ./server
-    - docker build -t adityaraval/multi-worker -f ./worker
-    #docker login
-    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-    #push images to docker
-    - docker push adityaraval/multi-client
-    - docker push adityaraval/multi-nginx
-    - docker push adityaraval/multi-server
-    - docker push adityaraval/multi-worker
+  - docker build -t adityaraval/multi-client ./client
+  - docker build -t adityaraval/multi-nginx ./nginx
+  - docker build -t adityaraval/multi-server ./server
+  - docker build -t adityaraval/multi-worker ./worker
+# Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+# Take those images and push them to docker hub
+  - docker push adityaraval/multi-client
+  - docker push adityaraval/multi-nginx
+  - docker push adityaraval/multi-server
+  - docker push adityaraval/multi-worker
